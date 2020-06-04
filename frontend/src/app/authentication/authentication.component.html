@@ -1,0 +1,114 @@
+<div class="container col-md-4 mt-5 bg-white">
+
+  <ngb-tabset [destroyOnHide]="false">
+
+    <ngb-tab title="Login" class="col-md-6" style="height:500px">
+      <ng-template ngbTabContent>
+        <form #loginForm="ngForm">
+          <div class="col-md-12 mb-3">
+            <label for="validationServer001">Email</label>
+            <input type="email" class="form-control"
+              [ngClass]="{'is-invalid':email.invalid && email.touched,'is-valid':email.valid}" id="validationServer001"
+              placeholder="YourEmail@gmail.com" [(ngModel)]="user.email" #email="ngModel" name="email" [email]="true"
+              required>
+            <div class="invalid-feedback" *ngIf="email.invalid">
+              Please provide a valid email.
+            </div>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label for="validationServer002">Password</label>
+            <input type="password" class="form-control" minlength="6"
+              [ngClass]="{'is-invalid':password.invalid && password.touched,'is-valid':password.valid}"
+              id="validationServer002" placeholder="Your password" [(ngModel)]="user.password" #password="ngModel"
+              name="password" required>
+            <div class="invalid-feedback" *ngIf="password.invalid">
+              Please provide a valid password.
+              <a href="#" class="float-right">Forgot Password?</a>
+            </div>
+          </div>
+
+
+          <div class="col-md-12 mt-5">
+            <br />
+            <button class="btn btn-primary col-md-12" (click)="login()"
+              [disabled]="loginForm.form.invalid">LOGIN</button>
+          </div>
+        </form>
+        <br />
+        <hr>
+        <div class="row">
+          <div class="col-md-6">
+            <p class="ml-4">Login with</p>
+          </div>
+          <div class="col-md-6">
+            <div class="ml-4 mr-5">
+              <img src="assets/images/google.png" class="pr-3" />
+              <img src="assets/images/facebook.png" class="pr-3" />
+              <img src="assets/images/twitter.png" />
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-tab>
+
+    <ngb-tab title="Sign up" class="col-md-6">
+      <ng-template ngbTabContent>
+        <form #signupForm="ngForm">
+          <div class="col-md-12 mb-3">
+            <label for="validationServer01">Name</label>
+            <input type="text" minlength="3" class="form-control is-invalid" id="validationServer01"
+              placeholder="Enter your Name here"
+              [ngClass]="{'is-invalid':name.invalid && name.touched,'is-valid':name.valid}" id="validationServer02"
+              [(ngModel)]="user.name" #name="ngModel" name="name" required>
+            <div class="invalid-feedback" *ngIf="name.invalid">
+              Please provide a valid name.
+            </div>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label for="validationServer02">Email</label>
+            <input type="email" class="form-control"
+              [ngClass]="{'is-invalid':email.invalid && email.touched,'is-valid':email.valid}" id="validationServer02"
+              placeholder="YourEmail@gmail.com" [(ngModel)]="user.email" #email="ngModel" name="email" [email]="true"
+              required>
+            <div class="invalid-feedback" *ngIf="email.invalid">
+              Please provide a valid email.
+            </div>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label for="validationServer03">Password</label>
+            <input type="password" class="form-control" minlength="6"
+              [ngClass]="{'is-invalid':password.invalid && password.touched,'is-valid':password.valid}"
+              id="validationServer03" placeholder="Your password" [(ngModel)]="user.password" #password="ngModel"
+              name="password" required>
+            <div class="invalid-feedback" *ngIf="password.invalid">
+              Please provide a valid password.
+            </div>
+          </div>
+
+
+          <div class="col-md-12 mt-5">
+            <small>By creating a personal account, you agree to our Terms and Conditions</small>
+            <br />
+            <button class="btn btn-primary col-md-12" (click)="signup()" [disabled]="signupForm.form.invalid">SIGN
+              UP</button>
+          </div>
+        </form>
+        <br />
+        <hr>
+        <div class="row">
+          <div class="col-md-6">
+            <p class="ml-4">Or register via</p>
+          </div>
+          <div class="col-md-6">
+            <div class="ml-4 mr-5">
+              <img src="assets/images/google.png" class="pr-3" />
+              <img src="assets/images/facebook.png" class="pr-3" />
+              <img src="assets/images/twitter.png" />
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-tab>
+
+  </ngb-tabset>
+</div>

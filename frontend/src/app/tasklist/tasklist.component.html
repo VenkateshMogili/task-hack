@@ -1,0 +1,153 @@
+<div class="row mt-2 ml-5 mr-5 p-2" style="background-color: #AED8FF;border-radius: 10px;">
+  <div class="col-md-10">
+    <p style="color:white" class="mt-2">Welcome <br />
+      <b>{{username}}</b></p>
+  </div>
+  <div class="col-md-2 mt-3">
+    <button class="btn btn-default" data-toggle="modal" data-target="#exampleModalCenter"
+      style="background-color: white;border:0;color:black">Create a new task</button>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Create Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="task-name" class="col-form-label">Task Name</label>
+            <input type="text" placeholder="Enter the Task Name" class="form-control" id="task-name"
+              style="border:2px solid lightgray;color:gray;width:300px;">
+          </div>
+          <div class="form-group">
+            <label for="task-date" class="col-form-label">Deadline</label>
+            <div class="row col-md-12">
+              <button class="btn btn-secondary mr-3 bg-white dropdown-toggle" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false" style="border:2px solid lightgray;color:gray;width:155px">
+                Date
+              </button>
+              <button class="btn btn-secondary bg-white dropdown-toggle" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false" style="border:2px solid lightgray;color:gray;width:130px">
+                Time
+              </button>
+              <input type="date" placeholder="Date" class="form-control col-md-6" id="task-date" hidden>
+              <input type="time" placeholder="Time" class="form-control col-md-6" id="task-time" hidden>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="task-date" class="col-form-label">Choose Label</label>
+            <div>
+              <span class="badge badge-warning m-1">Work</span>
+              <span class="badge badge-info m-1">Personal</span>
+              <span class="badge badge-danger m-1">Shopping</span>
+              <span class="badge badge-secondary m-1">Others</span>
+            </div>
+          </div>
+          <div class="text-center">
+            <button class="btn btn-primary m-1"
+              style="width:200px;background-color: #0085FF;border:0;border-radius: 0;">SAVE</button>
+            <button class="btn btn-danger m-1" style="width:200px;background-color: #FF938A;border:0;border-radius: 0;"
+              data-dismiss="modal">CANCEL</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-2 ml-5 mr-5 p-2" style="background-color: white;border-radius: 10px;">
+  <!-- Tasks list -->
+  <div class="col-md-6">
+    <h5 class="mt-2">Task List</h5>
+  </div>
+  <div class="row col-md-6">
+    <div class="dropdown col-md-3">
+      <button class="btn btn-secondary bg-white dropdown-toggle" type="button" id="dropdownMenuButton"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+        style="border:2px solid lightgray;color:gray;width:130px">
+        Date
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="#">Action</a>
+      </div>
+    </div>
+    <div class="dropdown col-md-3">
+      <button class="btn btn-secondary bg-white dropdown-toggle" type="button" id="dropdownMenuButton2"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+        style="border:2px solid lightgray;color:gray;width:130px">
+        Status
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+        <a class="dropdown-item" href="#">Action</a>
+      </div>
+    </div>
+    <div class="dropdown col-md-3">
+      <button class="btn btn-secondary bg-white dropdown-toggle" type="button" id="dropdownMenuButton3"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+        style="border:2px solid lightgray;color:gray;width:130px">
+        Priority
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+        <a class="dropdown-item" href="#">Action</a>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <button class="btn btn-danger" style="background-color: #FFD3CF;color:black;border:0;width:130px">Reset</button>
+    </div>
+  </div>
+
+  <!-- tasks table -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" width="35%">TASK NAME</th>
+        <th scope="col" width="10%" style="text-align:center">STATUS</th>
+        <th scope="col" width="20%">DATE CREATED</th>
+        <th scope="col" width="20%">DEADLINE DATE</th>
+        <th scope="col" width="15%" style="text-align:center">ACTION</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <p class="taskname">Sample task
+            <span class="badge badge-warning">Work</span></p>
+        </td>
+        <td style="text-align:center"><span style="color:#34A853">In Progress</span></td>
+        <td>22 April 2020, 11:30 AM</td>
+        <td>24 April 2020, 01:00 PM</td>
+        <td style="text-align:center"><a href="#">Mark as "Completed"</a></td>
+      </tr>
+      <tr>
+        <td>
+          <p class="taskname">Sample task
+            <span class="badge badge-info">Personal</span></p>
+        </td>
+        <td style="text-align:center"><span style="color:#34A853">In Progress</span></td>
+        <td>22 April 2020, 11:30 AM</td>
+        <td>24 April 2020, 01:00 PM</td>
+        <td style="text-align:center"><a href="#">Mark as "Completed"</a></td>
+      </tr>
+      <tr>
+        <td>
+          <p class="taskname">Sample task biggest task in this list
+            <span class="badge badge-danger">Shopping</span></p>
+        </td>
+        <td style="text-align:center"><span style="color:#EB4335">New</span></td>
+        <td>22 April 2020, 11:30 AM</td>
+        <td>24 April 2020, 01:00 PM</td>
+        <td style="text-align:center"><a href="#">Mark as "Completed"</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="col-md-12 text-center">
+    <button class="btn btn-default" style="color:#0085FF">View More</button>
+  </div>
+</div>

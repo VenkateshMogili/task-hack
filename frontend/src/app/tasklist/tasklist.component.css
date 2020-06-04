@@ -1,0 +1,23 @@
+.table th{
+  border-top:0;
+  font-size: 12px;
+  color: gray;
+  border-bottom:0;
+}
+.table-striped tbody tr:nth-of-type(odd){
+  border:0;
+}
+.table td{
+  padding: 20px 0 20px 15px;
+  font-size:14px;
+}
+.taskname{
+  width: 80%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin:0;
+}
+.modal-header{
+  border-top: 12px solid #BFE0FF;
+}

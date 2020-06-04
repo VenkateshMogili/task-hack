@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~ngx-toastr/toastr';
+body{
+  background-color:#43CBF7;
+}
+.nav-item{
+  width:50%!important;
+}
+.nav-item a{
+  color:#383838;
+}
+.nav-item .active{
+  border:0!important;
+  border-bottom:2px solid #43CBF7 !important;
+}
+.nav-link,.nav-link:hover{
+  border:0!important;
+  border-bottom:2px solid #7E7E7E!important;
+}

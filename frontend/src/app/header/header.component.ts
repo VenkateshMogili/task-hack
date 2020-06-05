@@ -9,8 +9,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class HeaderComponent implements OnInit {
 
+  username: any;
   constructor(private router: Router, private toastr: ToastrService) {
-    if (localStorage.getItem("userDetails") == null) {
+    if (localStorage.getItem("userToken") == null) {
       this.router.navigate(['/auth']);
     } else {
       this.router.navigate(['/dashboard']);
@@ -18,6 +19,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.username = JSON.parse(localStorage.getItem("username"));
   }
 
 

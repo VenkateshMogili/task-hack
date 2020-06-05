@@ -16,7 +16,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   loadToken() {
-    const token = localStorage.getItem('userToken');
+    const token = JSON.parse(localStorage.getItem('userToken'));
     this.authToken = token;
   };
 
@@ -72,6 +72,9 @@ export class ApiService {
   // Tasks api
   createTask(data): Observable<any> {
     this.loadToken();
+    data.deadline_date = data.deadline_date.year + "-" +
+      data.deadline_date.day + "-" + data.deadline_date.month;
+    data.deadline_time = data.deadline_time.hour + ":" + data.deadline_time.minute
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -84,6 +87,11 @@ export class ApiService {
   };
   updateTask(id, data): Observable<any> {
     this.loadToken();
+    if (data.deadline_date && data.deadline_time) {
+      data.deadline_date = data.deadline_date.year + "-" +
+        data.deadline_date.day + "-" + data.deadline_date.month;
+      data.deadline_time = data.deadline_time.hour + ":" + data.deadline_time.minute
+    }
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',

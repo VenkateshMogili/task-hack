@@ -5,7 +5,7 @@
   </div>
   <div class="col-md-2 mt-3">
     <button class="btn btn-default" data-toggle="modal" data-target="#exampleModalCenter"
-      style="background-color: white;border:0;color:black">Create a new task</button>
+      style="background-color: white;border:0;color:black" (click)="resetForm()">Create a new task</button>
   </div>
 </div>
 <!-- Modal -->
@@ -15,46 +15,61 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Create Task</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" (click)="resetLabels()" class="close" id="closeModal" data-dismiss="modal"
+          aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form>
+        <form #taskForm="ngForm">
           <div class="form-group">
             <label for="task-name" class="col-form-label">Task Name</label>
-            <input type="text" placeholder="Enter the Task Name" class="form-control" id="task-name"
-              style="border:2px solid lightgray;color:gray;width:300px;">
+            <input type="text" placeholder="Enter the Task Name" minlength="3" [(ngModel)]="task.task_name"
+              name="task_name" class="form-control" id="task-name" required
+              style="border:2px solid lightgray;color:gray;width:400px;">
           </div>
           <div class="form-group">
             <label for="task-date" class="col-form-label">Deadline</label>
             <div class="row col-md-12">
-              <button class="btn btn-secondary mr-3 bg-white dropdown-toggle" type="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false" style="border:2px solid lightgray;color:gray;width:155px">
-                Date
-              </button>
-              <button class="btn btn-secondary bg-white dropdown-toggle" type="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false" style="border:2px solid lightgray;color:gray;width:130px">
-                Time
-              </button>
-              <input type="date" placeholder="Date" class="form-control col-md-6" id="task-date" hidden>
-              <input type="time" placeholder="Time" class="form-control col-md-6" id="task-time" hidden>
+              <div class="form-group">
+                <div class="input-group">
+                  <input class="form-control" placeholder="Date" name="deadline_date" [(ngModel)]="task.deadline_date"
+                    ngbDatepicker #d="ngbDatepicker" required>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary dropdown-toggle" (click)="d.toggle()"
+                      type="button"></button>
+                  </div>
+                  <div class="ml-4">
+                    <ngb-timepicker [(ngModel)]="task.deadline_time" name="deadline_time" [spinners]="false">
+                    </ngb-timepicker>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="form-group">
             <label for="task-date" class="col-form-label">Choose Label</label>
             <div>
-              <span class="badge badge-warning m-1">Work</span>
-              <span class="badge badge-info m-1">Personal</span>
-              <span class="badge badge-danger m-1">Shopping</span>
-              <span class="badge badge-secondary m-1">Others</span>
+              <span class="badge badge-warning m-1 labels" [ngClass]="{'activeLabel':task.label=='Work'}"
+                (click)="setLabel('Work',0)">Work</span>
+              <span class="badge badge-info m-1 labels" [ngClass]="{'activeLabel':task.label=='Personal'}"
+                (click)="setLabel('Personal',1)">Personal</span>
+              <span class="badge badge-danger m-1 labels" [ngClass]="{'activeLabel':task.label=='Shopping'}"
+                (click)="setLabel('Shopping',2)">Shopping</span>
+              <span class="badge badge-secondary m-1 labels" [ngClass]="{'activeLabel':task.label=='Others'}"
+                (click)="setLabel('Others',3)">Others</span>
             </div>
           </div>
           <div class="text-center">
-            <button class="btn btn-primary m-1"
-              style="width:200px;background-color: #0085FF;border:0;border-radius: 0;">SAVE</button>
+            <button *ngIf="!task.id" class="btn btn-primary m-1"
+              style="width:200px;background-color: #0085FF;border:0;border-radius: 0;"
+              (click)="saveTask();resetLabels()" type="button" [disabled]="taskForm.form.invalid">SAVE</button>
+
+            <button *ngIf="task.id" class="btn btn-primary m-1"
+              style="width:200px;background-color: #0085FF;border:0;border-radius: 0;"
+              (click)="updateTaskData();resetLabels()" type="button" [disabled]="taskForm.form.invalid">UPDATE</button>
             <button class="btn btn-danger m-1" style="width:200px;background-color: #FF938A;border:0;border-radius: 0;"
-              data-dismiss="modal">CANCEL</button>
+              data-dismiss="modal" (click)="resetLabels()">CANCEL</button>
           </div>
         </form>
       </div>
@@ -69,13 +84,14 @@
   </div>
   <div class="row col-md-6">
     <div class="dropdown col-md-3">
-      <button class="btn btn-secondary bg-white dropdown-toggle" type="button" id="dropdownMenuButton"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-        style="border:2px solid lightgray;color:gray;width:130px">
-        Date
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#">Action</a>
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control" placeholder="Date" name="deadline_dates" [(ngModel)]="deadline_dates"
+            ngbDatepicker #dd="ngbDatepicker" required>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary dropdown-toggle" (click)="dd.toggle()" type="button"></button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="dropdown col-md-3">
@@ -85,7 +101,9 @@
         Status
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">New</a>
+        <a class="dropdown-item" href="#">In Progress</a>
+        <a class="dropdown-item" href="#">Completed</a>
       </div>
     </div>
     <div class="dropdown col-md-3">
@@ -95,7 +113,9 @@
         Priority
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">Low</a>
+        <a class="dropdown-item" href="#">Medium</a>
+        <a class="dropdown-item" href="#">High</a>
       </div>
     </div>
     <div class="col-md-3">
@@ -107,47 +127,57 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col" width="35%">TASK NAME</th>
+        <th scope="col" width="25%">TASK NAME</th>
         <th scope="col" width="10%" style="text-align:center">STATUS</th>
-        <th scope="col" width="20%">DATE CREATED</th>
-        <th scope="col" width="20%">DEADLINE DATE</th>
-        <th scope="col" width="15%" style="text-align:center">ACTION</th>
+        <th scope="col" width="15%" style="text-align:center">PRIORITY</th>
+        <th scope="col" width="15%">DATE CREATED</th>
+        <th scope="col" width="15%">DEADLINE DATE</th>
+        <th scope="col" width="10%" style="text-align:center">ACTION</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr *ngFor="let task of tasks | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;let i=index">
         <td>
-          <p class="taskname">Sample task
-            <span class="badge badge-warning">Work</span></p>
+          <p class="taskname">{{task.task_name}}
+            <span class="badge badge-warning" *ngIf="task.label=='Work'">{{task.label}}</span>
+            <span class="badge badge-info" *ngIf="task.label=='Personal'">{{task.label}}</span>
+            <span class="badge badge-danger" *ngIf="task.label=='Shopping'">{{task.label}}</span>
+            <span class="badge badge-secondary" *ngIf="task.label=='Others'">{{task.label}}</span></p>
         </td>
-        <td style="text-align:center"><span style="color:#34A853">In Progress</span></td>
-        <td>22 April 2020, 11:30 AM</td>
-        <td>24 April 2020, 01:00 PM</td>
-        <td style="text-align:center"><a href="#">Mark as "Completed"</a></td>
-      </tr>
-      <tr>
-        <td>
-          <p class="taskname">Sample task
-            <span class="badge badge-info">Personal</span></p>
+        <td style="text-align:center">
+          <span style="color:#EB4335" *ngIf="task.status==0">New</span>
+          <span style="color:#34A853" *ngIf="task.status==1">In Progress</span>
+          <span style="color:rgb(46, 116, 207)" *ngIf="task.status==2">Completed</span>
         </td>
-        <td style="text-align:center"><span style="color:#34A853">In Progress</span></td>
-        <td>22 April 2020, 11:30 AM</td>
-        <td>24 April 2020, 01:00 PM</td>
-        <td style="text-align:center"><a href="#">Mark as "Completed"</a></td>
-      </tr>
-      <tr>
-        <td>
-          <p class="taskname">Sample task biggest task in this list
-            <span class="badge badge-danger">Shopping</span></p>
+
+        <td style="text-align:center">
+          <span style="color:rgb(46, 116, 207)" *ngIf="task.priority==0">Low</span>
+          <span style="color:#34A853" *ngIf="task.priority==1">Medium</span>
+          <span style="color:#EB4335" *ngIf="task.priority==2">High</span>
+          &nbsp;
+          (<i class="fa fa-flag" style="color:rgb(46, 116, 207)" title="Low" (click)="updatePriority(task.id,0)"></i>
+          &nbsp;
+          <i class="fa fa-flag" style="color:#34A853" title="Medium" (click)="updatePriority(task.id,1)"></i>
+          &nbsp;
+          <i class="fa fa-flag" style="color:#EB4335" title="High" (click)="updatePriority(task.id,2)"></i>)
         </td>
-        <td style="text-align:center"><span style="color:#EB4335">New</span></td>
-        <td>22 April 2020, 11:30 AM</td>
-        <td>24 April 2020, 01:00 PM</td>
-        <td style="text-align:center"><a href="#">Mark as "Completed"</a></td>
+        <td>{{task.created_at | date:'dd MMM yyyy, hh:mm a'}}</td>
+        <td>{{task.deadline_date |date:'dd MMM yyyy'}},
+          <span [innerHTML]="formatTime(task.deadline_time)"></span></td>
+        <td style="text-align:center">
+          <a (click)="updateTask(task.id,1)" style="cursor:pointer;color:#34A853" title="Start"><i
+              class="fa fa-thumbs-up"></i></a>
+          &nbsp;&nbsp;
+          <a (click)="updateTask(task.id,2)" style="cursor:pointer;color:rgb(46, 116, 207)" title="Complete"><i
+              class="fa fa-check"></i></a>
+          &nbsp;&nbsp;
+          <a (click)="updateTasks(task.id)" data-toggle="modal" data-target="#exampleModalCenter"
+            style="cursor:pointer;" title="Edit"><i class="fa fa-check-square-o"></i></a>
+        </td>
       </tr>
     </tbody>
   </table>
-  <div class="col-md-12 text-center">
-    <button class="btn btn-default" style="color:#0085FF">View More</button>
-  </div>
+  <ngb-pagination class="d-flex justify-content-end" [(page)]="page" [pageSize]="pageSize" [boundaryLinks]="true"
+    [collectionSize]="tasks.length">
+  </ngb-pagination>
 </div>

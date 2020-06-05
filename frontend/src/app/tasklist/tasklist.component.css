@@ -21,3 +21,15 @@
 .modal-header{
   border-top: 12px solid #BFE0FF;
 }
+.activeLabel{
+  background-color:white;
+  color:black;
+  font-size:14px;
+  border:1px solid navy;
+}
+.labels{
+  cursor: pointer;
+}
+.ngb-pagination{
+  float:right;
+}

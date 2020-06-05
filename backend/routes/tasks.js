@@ -13,7 +13,7 @@ router.get('/', verifyToken, function(req, res, next) {
       db.query("SELECT * FROM tasks",(err,row,fields)=>{
         if(err) res.send({success:false,message:"Error"})
         if(row.length>0){
-        res.send({success:true,data:row,message:"Success"});
+        res.send({success:true,tasklist:row,message:"Success"});
         } else{
           res.send({success:false,message:"No task found!"});
         }
@@ -46,22 +46,16 @@ router.post('/create',verifyToken, function(req, res, next) {
       res.sendStatus(403);
     } else{
       const data = req.body;
+      const today = new Date();
       const task = {
         task_name: data.task_name,
         deadline_date: data.deadline_date,
         deadline_time: data.deadline_time,
         label: data.label
       }
-      db.query("SELECT * FROM tasks WHERE task_name=?",[task.task_name],(err,rows)=>{
-        if(err) res.send({success: false,message:err});
-        else if(rows.length>0){
-          res.send({success: false,message:"Duplicate task found!"});
-        } else{
-          db.query("INSERT INTO tasks SET ?",[task],(err,row)=>{
-            if(err) res.send({success:false,message:err});
-            res.send({success: true,message:"Task created successfully"});
-          });
-        }
+      db.query("INSERT INTO tasks SET ?",[task],(err,row)=>{
+        if(err) res.send({success:false,message:err});
+        res.send({success: true,message:"Task created successfully"});
       });
     }
   });
@@ -112,11 +106,9 @@ router.delete('/delete/:task_id',verifyToken, function(req, res, next) {
 });
 
 function verifyToken(req,res,next){
-  const bearerHeader = req.headers['authorization'];
+  const bearerHeader = req.headers['token'];
   if(typeof bearerHeader!=='undefined'){
-    const bearer = bearerHeader.split(' ');
-    const bearerToken = bearer[1];
-    req.token = bearerToken;
+    req.token = bearerHeader;
     next();
   } else{
     res.send({success: false,status:'Token verification failed'});

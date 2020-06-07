@@ -2,12 +2,12 @@
 
 # Get Started
 
-# 1.Clone the project:
+## 1.Clone the project:
 
 ```git clone https://github.com/VenkateshMogili/task-hack.git```
 
 ------------------------------------------------------------------------
-# 2.Backend Setup
+## 2.Backend Setup
 
 ### Change Directory to backend
 ```cd backend/```
@@ -30,7 +30,7 @@
 <a href="http://localhost:8080" target="_blank">http://localhost:8080</a>
 
 -----------------------------------------------------------------
-# 3.Frontend Setup
+## 3.Frontend Setup
 
 ### Change Directory to frontend
 ```cd frontend/```

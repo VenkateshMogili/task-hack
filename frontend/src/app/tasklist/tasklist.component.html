@@ -1,21 +1,27 @@
+<!-- welcome -->
 <div class="row mt-2 ml-5 mr-5 p-2" style="background-color: #AED8FF;border-radius: 10px;">
   <div class="col-md-10">
     <p style="color:white" class="mt-2">Welcome <br />
-      <b>{{username}}</b></p>
+      <b>{{user.username}}</b></p>
   </div>
   <div class="col-md-2 mt-3">
     <button class="btn btn-default" data-toggle="modal" data-target="#exampleModalCenter"
-      style="background-color: white;border:0;color:black" (click)="resetForm()">Create a new task</button>
+      style="background-color: white;border:0;color:black" (click)="resetForm();"><i class="fa fa-pencil"></i>Create a
+      new
+      task</button>
   </div>
 </div>
-<!-- Modal -->
+<!-- Task Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Create Task</h5>
-        <button type="button" (click)="resetLabels()" class="close" id="closeModal" data-dismiss="modal"
+        <h5 class="modal-title" id="exampleModalLongTitle">
+          <span *ngIf="!task.id">Create Task</span>
+          <span *ngIf="task.id">Update Task</span>
+        </h5>
+        <button type="button" (click)="resetLabels();resetForm()" class="close" id="closeModal" data-dismiss="modal"
           aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -23,32 +29,26 @@
       <div class="modal-body">
         <form #taskForm="ngForm">
           <div class="form-group">
-            <label for="task-name" class="col-form-label">Task Name</label>
-            <input type="text" placeholder="Enter the Task Name" minlength="3" [(ngModel)]="task.task_name"
-              name="task_name" class="form-control" id="task-name" required
-              style="border:2px solid lightgray;color:gray;width:400px;">
+            <label for="task-name" class="col-form-label">Task <span style="color:tomato">*</span></label>
+            <textarea placeholder="Enter the Task Description" minlength="3" maxlength="250"
+              [(ngModel)]="task.task_name" name="task_name" class="form-control" id="task-name" required
+              style="width:400px;"></textarea>
           </div>
           <div class="form-group">
-            <label for="task-date" class="col-form-label">Deadline</label>
-            <div class="row col-md-12">
-              <div class="form-group">
-                <div class="input-group">
-                  <input class="form-control" placeholder="Date" name="deadline_date" [(ngModel)]="task.deadline_date"
-                    ngbDatepicker #d="ngbDatepicker" required>
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary dropdown-toggle" (click)="d.toggle()"
-                      type="button"></button>
-                  </div>
-                  <div class="ml-4">
-                    <ngb-timepicker [(ngModel)]="task.deadline_time" name="deadline_time" [spinners]="false">
-                    </ngb-timepicker>
-                  </div>
-                </div>
+            <label for="task-date" class="col-form-label">Deadline <sup>( Optional )</sup></label>
+            <div class="row col-md-12 m-0">
+              <div class="col-md-6" style="margin-left:-25px">
+                <input class="form-control" type="date" [(ngModel)]="task.deadline_date" name="deadline_date"
+                  id="task-date" />
+              </div>
+              <div class="col-md-5" style="margin-left:25px;">
+                <input class="form-control" type="time" [(ngModel)]="task.deadline_time" name="deadline_time"
+                  id="task-time" />
               </div>
             </div>
           </div>
           <div class="form-group">
-            <label for="task-date" class="col-form-label">Choose Label</label>
+            <label for="task-time" class="col-form-label">Choose Label <sup>( Optional )</sup></label>
             <div>
               <span class="badge badge-warning m-1 labels" [ngClass]="{'activeLabel':task.label=='Work'}"
                 (click)="setLabel('Work',0)">Work</span>
@@ -62,14 +62,14 @@
           </div>
           <div class="text-center">
             <button *ngIf="!task.id" class="btn btn-primary m-1"
-              style="width:200px;background-color: #0085FF;border:0;border-radius: 0;"
-              (click)="saveTask();resetLabels()" type="button" [disabled]="taskForm.form.invalid">SAVE</button>
+              style="width:225px;background-color: #0085FF;border:0;border-radius: 0;"
+              (click)="saveTask();resetLabels()" type="button" [disabled]="!task.task_name">SAVE</button>
 
             <button *ngIf="task.id" class="btn btn-primary m-1"
-              style="width:200px;background-color: #0085FF;border:0;border-radius: 0;"
-              (click)="updateTaskData();resetLabels()" type="button" [disabled]="taskForm.form.invalid">UPDATE</button>
-            <button class="btn btn-danger m-1" style="width:200px;background-color: #FF938A;border:0;border-radius: 0;"
-              data-dismiss="modal" (click)="resetLabels()">CANCEL</button>
+              style="width:225px;background-color: #0085FF;border:0;border-radius: 0;"
+              (click)="updateTaskData();resetLabels()" type="button" [disabled]="!task.task_name">UPDATE</button>
+            <button class="btn btn-danger m-1" style="width:225px;background-color: #FF938A;border:0;border-radius: 0;"
+              data-dismiss="modal" (click)="resetLabels();resetForm()">CANCEL</button>
           </div>
         </form>
       </div>
@@ -77,72 +77,137 @@
   </div>
 </div>
 
-<div class="row mt-2 ml-5 mr-5 p-2" style="background-color: white;border-radius: 10px;">
-  <!-- Tasks list -->
-  <div class="col-md-6">
+<!-- View task -->
+<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">
+          <span *ngIf="task.id">View Task</span>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #taskForm="ngForm">
+          <div class="form-group">
+            <label for="task-name" class="col-form-label"><b>Task</b></label>
+            <p>{{task.task_name}}</p>
+          </div>
+          <div class="form-group">
+            <label for="task-date" class="col-form-label"><b>Deadline</b></label>
+            <div class="row col-md-12 m-0">
+              <div class="col-md-10" style="margin-left:-25px">
+                <p><i class="fa fa-calendar"></i> {{task.deadline_date | date:'dd MMM yyyy' }} ,
+                  {{formatTime(task.deadline_time)}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="task-time" class="col-form-label"><b>Label</b></label>
+            <div>
+              <i class="fa fa-tag"></i> {{task.label}}
+            </div>
+          </div>
+          <div class="text-center">
+            <button class="btn btn-danger m-1" style="width:225px;background-color: #FF938A;border:0;border-radius: 0;"
+              data-dismiss="modal">CLOSE</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Undo task -->
+<div *ngIf="deleted" class="mt-2 ml-5 mr-5" style="background-color: #AED8FF;border-radius: 10px;">
+  <div class="text-center alert alert-warning alert-dismissible fade show" role="alert">
+    If you want to Undo last deleted task. Click here <i class="fa fa-hand-o-right"></i>
+    &nbsp;&nbsp;<button class="btn btn-secondary" (click)="undoDeleted(lastDeletedId)">Undo (in
+      {{count}}seconds)</button>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+
+<!-- Tasks list -->
+<div class="row mt-2 ml-5 mr-5 p-2" style="background-color: white;border-radius: 10px;min-height:340px">
+  <div class="col-md-2">
     <h5 class="mt-2">Task List</h5>
   </div>
-  <div class="row col-md-6">
-    <div class="dropdown col-md-3">
-      <div class="form-group">
-        <div class="input-group">
-          <input class="form-control" placeholder="Date" name="deadline_dates" [(ngModel)]="deadline_dates"
-            ngbDatepicker #dd="ngbDatepicker" required>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary dropdown-toggle" (click)="dd.toggle()" type="button"></button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="dropdown col-md-3">
-      <button class="btn btn-secondary bg-white dropdown-toggle" type="button" id="dropdownMenuButton2"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-        style="border:2px solid lightgray;color:gray;width:130px">
-        Status
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-        <a class="dropdown-item" href="#">New</a>
-        <a class="dropdown-item" href="#">In Progress</a>
-        <a class="dropdown-item" href="#">Completed</a>
-      </div>
-    </div>
-    <div class="dropdown col-md-3">
-      <button class="btn btn-secondary bg-white dropdown-toggle" type="button" id="dropdownMenuButton3"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-        style="border:2px solid lightgray;color:gray;width:130px">
-        Priority
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-        <a class="dropdown-item" href="#">Low</a>
-        <a class="dropdown-item" href="#">Medium</a>
-        <a class="dropdown-item" href="#">High</a>
-      </div>
-    </div>
+  <div class="row col-md-10" *ngIf="tasks.length>0">
     <div class="col-md-3">
-      <button class="btn btn-danger" style="background-color: #FFD3CF;color:black;border:0;width:130px">Reset</button>
+      <input type="search" [(ngModel)]="searchTerm" name="searchTerm" class="form-control" placeholder="Search"
+        style="font-size: 12px;" />
+    </div>
+    <div class="col-md-4">
+      <div class="row m-0">
+        <input class="form-control" type="date" style="width:180px;font-size: 12px;" placeholder="Date"
+          name="deadline_dates" [(ngModel)]="deadline_dates" />
+        <input class="form-control" type="time" style="width:100px;font-size: 12px;" placeholder="Time"
+          name="deadline_times" [(ngModel)]="deadline_times" />
+      </div>
+    </div>
+    <div class="col-md-2">
+      <select class="form-control" name="priority" [(ngModel)]="priority" style="font-size: 12px;">
+        <option [ngValue]="undefined" selected>Priority</option>
+        <option value="low">Low</option>
+        <option value="1">Medium</option>
+        <option value="2">High</option>
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <select class="form-control" name="labels" [(ngModel)]="labels" style="font-size: 12px;">
+        <option [ngValue]="undefined" selected>Labels</option>
+        <option value="Work">Work</option>
+        <option value="Personal">Personal</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Others">Others</option>
+      </select>
+    </div>
+    <div class="col-md-1">
+      <button (click)="resetFilter()" class="btn btn-danger"
+        style="background-color: #FFD3CF;color:black;border:0;width:70px;font-size: 12px;">Reset</button>
     </div>
   </div>
 
   <!-- tasks table -->
-  <table class="table table-striped">
+  <div class="col-md-12 text-center" *ngIf="!tasks.length>0">
+    <img src="assets/images/notasks.png" />
+    <h4>No Tasks Yet</h4>
+    <p>Please create a task to get started</p>
+  </div>
+  <table class="table table-striped col-xs-6" *ngIf="tasks.length>0">
     <thead>
       <tr>
-        <th scope="col" width="25%">TASK NAME</th>
+        <th scope="col" width="20%">TASK</th>
         <th scope="col" width="10%" style="text-align:center">STATUS</th>
-        <th scope="col" width="15%" style="text-align:center">PRIORITY</th>
-        <th scope="col" width="15%">DATE CREATED</th>
-        <th scope="col" width="15%">DEADLINE DATE</th>
-        <th scope="col" width="10%" style="text-align:center">ACTION</th>
+        <th scope="col" width="15%">PRIORITY</th>
+        <th scope="col" width="20%">DATE CREATED</th>
+        <th scope="col" width="20%">DUE DATE</th>
+        <th scope="col" width="15%" style="text-align:center">ACTION</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let task of tasks | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;let i=index">
+      <tr
+        *ngFor="let task of tasks| searchFilter:searchTerm:deadline_dates:deadline_times:priority:labels | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;let i=index">
         <td>
-          <p class="taskname">{{task.task_name}}
-            <span class="badge badge-warning" *ngIf="task.label=='Work'">{{task.label}}</span>
-            <span class="badge badge-info" *ngIf="task.label=='Personal'">{{task.label}}</span>
-            <span class="badge badge-danger" *ngIf="task.label=='Shopping'">{{task.label}}</span>
-            <span class="badge badge-secondary" *ngIf="task.label=='Others'">{{task.label}}</span></p>
+          <p class="taskname">{{task.task_name}}</p>
+          <span class="badge badge-warning" *ngIf="task.label=='Work'"><i class="fa fa-tag"></i> {{task.label}}</span>
+          <span class="badge badge-info" *ngIf="task.label=='Personal'"><i class="fa fa-tag"></i> {{task.label}}</span>
+          <span class="badge badge-danger" *ngIf="task.label=='Shopping'"><i class="fa fa-tag"></i>
+            {{task.label}}</span>
+          <span class="badge badge-secondary" *ngIf="task.label=='Others'"><i class="fa fa-tag"></i>
+            {{task.label}}</span>
+          &nbsp; &nbsp;<i class="fa fa-eye" style="cursor: pointer;" title="View Task Description" data-toggle="modal"
+            data-target="#exampleModalCenter2" (click)="updateTasks(task.id)"></i>
+          &nbsp; &nbsp;
+          <i class="fa fa-whatsapp" (click)="shareTask(task)" style="cursor: pointer;color:#34A853"
+            title="Share via Whatsapp"></i>
         </td>
         <td style="text-align:center">
           <span style="color:#EB4335" *ngIf="task.status==0">New</span>
@@ -150,34 +215,81 @@
           <span style="color:rgb(46, 116, 207)" *ngIf="task.status==2">Completed</span>
         </td>
 
-        <td style="text-align:center">
-          <span style="color:rgb(46, 116, 207)" *ngIf="task.priority==0">Low</span>
+        <td>
+          <span style="color:rgb(46, 116, 207)" *ngIf="task.priority==0">Low &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
           <span style="color:#34A853" *ngIf="task.priority==1">Medium</span>
-          <span style="color:#EB4335" *ngIf="task.priority==2">High</span>
+          <span style="color:#EB4335" *ngIf="task.priority==2">High&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
           &nbsp;
-          (<i class="fa fa-flag" style="color:rgb(46, 116, 207)" title="Low" (click)="updatePriority(task.id,0)"></i>
+          (<i class="fa fa-flag" style="color:rgb(46, 116, 207);cursor:pointer" title="Low"
+            (click)="updatePriority(task.id,0)"></i>
           &nbsp;
-          <i class="fa fa-flag" style="color:#34A853" title="Medium" (click)="updatePriority(task.id,1)"></i>
+          <i class="fa fa-flag" style="color:#34A853;cursor:pointer" title="Medium"
+            (click)="updatePriority(task.id,1)"></i>
           &nbsp;
-          <i class="fa fa-flag" style="color:#EB4335" title="High" (click)="updatePriority(task.id,2)"></i>)
+          <i class="fa fa-flag" style="color:#EB4335;cursor:pointer" title="High"
+            (click)="updatePriority(task.id,2)"></i>)
         </td>
         <td>{{task.created_at | date:'dd MMM yyyy, hh:mm a'}}</td>
-        <td>{{task.deadline_date |date:'dd MMM yyyy'}},
-          <span [innerHTML]="formatTime(task.deadline_time)"></span></td>
+        <td>
+          <span *ngIf="task.deadline_date || task.deadline_time">{{task.deadline_date |date:'dd MMM yyyy'}} ,
+            <span [innerHTML]="formatTime(task.deadline_time)"></span>
+          </span>
+          <span *ngIf="!task.deadline_date && !task.deadline_time">No Deadline</span>
+        </td>
         <td style="text-align:center">
-          <a (click)="updateTask(task.id,1)" style="cursor:pointer;color:#34A853" title="Start"><i
-              class="fa fa-thumbs-up"></i></a>
+          <a (click)="updateTask(task.id,1)" [ngClass]="{'disabled':task.status>0}" style="cursor:pointer;color:#34A853"
+            title="Start"><i class="fa fa-thumbs-up"></i></a>
           &nbsp;&nbsp;
-          <a (click)="updateTask(task.id,2)" style="cursor:pointer;color:rgb(46, 116, 207)" title="Complete"><i
-              class="fa fa-check"></i></a>
+          <a (click)="updateTask(task.id,2)" [ngClass]="{'disabled':task.status==2}"
+            style="cursor:pointer;color:rgb(46, 116, 207)" title="Complete"><i class="fa fa-check"></i></a>
           &nbsp;&nbsp;
-          <a (click)="updateTasks(task.id)" data-toggle="modal" data-target="#exampleModalCenter"
-            style="cursor:pointer;" title="Edit"><i class="fa fa-check-square-o"></i></a>
+          <a (click)="updateTasks(task.id)" [ngClass]="{'disabled':task.status==2}" data-toggle="modal"
+            data-target="#exampleModalCenter" style="cursor:pointer;" title="Edit"><i
+              class="fa fa-pencil-square-o"></i></a>
+          &nbsp;&nbsp;
+          <a (click)="deleteTasks(task.id)" style="color:#EB4335;cursor:pointer;" title="Delete"><i
+              class="fa fa-trash"></i></a>
         </td>
       </tr>
     </tbody>
   </table>
-  <ngb-pagination class="d-flex justify-content-end" [(page)]="page" [pageSize]="pageSize" [boundaryLinks]="true"
-    [collectionSize]="tasks.length">
+  <ngb-pagination *ngIf="tasks.length>0" class="d-flex justify-content-end" [(page)]="page" [pageSize]="pageSize"
+    [boundaryLinks]="true" [(collectionSize)]="tasks.length">
   </ngb-pagination>
+</div>
+
+<!-- Tasks report -->
+<div class="row mt-2 ml-5 mr-5 p-2" style="background-color: white;border-radius: 10px;" *ngIf="tasks.length>0">
+  <div class="row col-md-8">
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-12">
+      <h5>Task Report</h5>
+      <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+        [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+      </canvas>
+    </div>
+  </div>
+  <div class="row col-md-4 text-center">
+    <div class="col-md-6 mt-lg-5 pt-lg-5">
+      <h5>{{completed}}</h5>
+      <small>
+        <span *ngIf="completed>1">TASKS</span>
+        <span *ngIf="completed<=1">TASK</span> COMPLETED</small>
+    </div>
+    <div class="col-md-6 mt-lg-5 pt-lg-5">
+      <h5>{{labelss}}</h5>
+      <small>MOST FAV.LABEL</small>
+    </div>
+    <div class="col-md-6">
+      <h5>{{pending}}</h5>
+      <small>
+        <span *ngIf="pending>1">TASKS</span>
+        <span *ngIf="pending<=1">TASK</span> PENDING</small>
+    </div>
+    <div class="col-md-6">
+      <h5>{{(completed/tasks.length)*100 | number : '1.0-0'}}%</h5>
+      <small>COMPLETION RATE</small>
+    </div>
+  </div>
 </div>

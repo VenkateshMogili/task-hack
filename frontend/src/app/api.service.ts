@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +21,6 @@ export class ApiService {
   };
 
   // user api
-
   // sign up
   createUser(data): Observable<any> {
     const httpOptions = {
@@ -55,8 +54,21 @@ export class ApiService {
       .pipe(map(this.extractData));
   };
 
+  updateUserPic(data): Observable<any> {
+    this.loadToken();
+    console.log(data);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        token: this.authToken
+      })
+    };
+    return this.http
+      .post(this.baseUrl + 'users/profile', data, httpOptions)
+      .pipe(map(this.extractData));
+  };
+
   // get user
-  getUser(id): Observable<any> {
+  getUser(): Observable<any> {
     this.loadToken();
     const httpOptions = {
       headers: new HttpHeaders({
@@ -65,16 +77,13 @@ export class ApiService {
       })
     };
     return this.http
-      .get(this.baseUrl + 'users/' + id, httpOptions)
+      .get(this.baseUrl + 'users/userDetails', httpOptions)
       .pipe(map(this.extractData));
   };
 
   // Tasks api
   createTask(data): Observable<any> {
     this.loadToken();
-    data.deadline_date = data.deadline_date.year + "-" +
-      data.deadline_date.day + "-" + data.deadline_date.month;
-    data.deadline_time = data.deadline_time.hour + ":" + data.deadline_time.minute
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -87,11 +96,6 @@ export class ApiService {
   };
   updateTask(id, data): Observable<any> {
     this.loadToken();
-    if (data.deadline_date && data.deadline_time) {
-      data.deadline_date = data.deadline_date.year + "-" +
-        data.deadline_date.day + "-" + data.deadline_date.month;
-      data.deadline_time = data.deadline_time.hour + ":" + data.deadline_time.minute
-    }
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',

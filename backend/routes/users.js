@@ -35,7 +35,23 @@ router.get('/', verifyToken, function(req, res, next) {
       });
     }
   })
+});
 
+router.get('/userDetails', verifyToken, function(req, res, next) {
+  jwt.verify(req.token,'secretkey',(err,authData)=>{
+    if(err){
+      res.sendStatus(403);
+    } else{
+      db.query("SELECT * FROM users where email=?",[authData.user.email],(err,row,fields)=>{
+        if(err) res.send({success:false,message:"Error"})
+        if(row.length>0){
+        res.send({success:true,data:{username:row[0].username,profile_pic:row[0].profile_pic,email:row[0].email},message:"Success"})
+        } else{
+          res.send({success:false,message:"No data found!"})
+        }
+      });
+    }
+  })
 });
 
 router.post('/login', function(req, res, next) {
@@ -105,17 +121,17 @@ router.post('/signup', function(req, res, next) {
   })
 });
 
-router.put('/update/:user_id',verifyToken, function(req, res, next) {
+router.put('/update',verifyToken, function(req, res, next) {
   jwt.verify(req.token,'secretkey',(err,authData)=>{
     if(err){
       res.sendStatus(403);
     } else{
-      const id= req.params.user_id;
+      const email= authData.user.email;
       const user = req.body;
-      db.query("SELECT * FROM users WHERE id=?",[id],(err,rows)=>{
+      db.query("SELECT * FROM users WHERE email=?",[email],(err,rows)=>{
         if(err) res.send({success: false,message:err});
         else if(rows.length>0){
-          db.query("UPDATE users SET ? WHERE id=?",[user,id],(err,row)=>{
+          db.query("UPDATE users SET ? WHERE email=?",[user,email],(err,row)=>{
             if(err) res.send({success:false,message:err});
             res.send({success: true,message:"User updated successfully"});
           });
@@ -162,14 +178,12 @@ router.post("/profile",verifyToken,upload.single('upload'),(req,res,next)=>{
 });
 
 function verifyToken(req,res,next){
-  const bearerHeader = req.headers['authorization'];
+  const bearerHeader = req.headers['token'];
   if(typeof bearerHeader!=='undefined'){
-    const bearer = bearerHeader.split(' ');
-    const bearerToken = bearer[1];
-    req.token = bearerToken;
+    req.token = bearerHeader;
     next();
   } else{
-    res.sendStatus(403);
+    res.send({success: false,status:'Token verification failed'});
   }
 }
 

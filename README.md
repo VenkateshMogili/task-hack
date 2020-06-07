@@ -1,4 +1,6 @@
-# task-hack
+# Task Hacker (A Simple Todo Management Application)
+
+### Demo
 
 git clone https://github.com/VenkateshMogili/task-hack.git
 

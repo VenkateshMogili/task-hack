@@ -86,8 +86,10 @@ export class TasklistComponent implements OnInit {
       let finalTime;
       if (times[0] > 11) {
         let evening = times[0] - 12;
-        if (evening < 10) {
+        if (evening < 10 && evening > 0) {
           finalTime = 0 + "" + evening + ":" + times[1] + " PM";
+        } else if (evening == 0) {
+          finalTime = 12 + ":" + times[1] + " PM";
         } else {
           finalTime = evening + ":" + times[1] + " PM";
         }

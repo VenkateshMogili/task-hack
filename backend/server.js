@@ -11,6 +11,7 @@ app.use(cors({origin:'*'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
 /*routes*/
 const usersRouter = require('./routes/users');
 const tasksRouter = require('./routes/tasks');

@@ -18,7 +18,37 @@ export class SearchFilterPipe implements PipeTransform {
           (time ? task.deadline_time == time + ":00" : '')) && (priority != undefined ? task.priority == priority : undefined)
           && (labels != undefined ? task.label == labels : undefined))
       });
-    } if (searchTerm && date && time) {
+    } else if (searchTerm && priority && labels) {
+      if (searchTerm.length > 0) {
+        searchTerm = searchTerm.toLowerCase();
+      }
+      if (priority == "low") {
+        priority = 0;
+      }
+      return value.filter((task) => {
+        return ((searchTerm ? task.task_name.toLowerCase().indexOf(searchTerm) > -1 : '') && (priority != undefined ? task.priority == priority : undefined)
+          && (labels != undefined ? task.label == labels : undefined))
+      });
+    } else if (searchTerm && date && time && priority) {
+      if (searchTerm.length > 0) {
+        searchTerm = searchTerm.toLowerCase();
+      }
+      if (priority == "low") {
+        priority = 0;
+      }
+      return value.filter((task) => {
+        return ((searchTerm ? task.task_name.toLowerCase().indexOf(searchTerm) > -1 : '') && ((date ? task.deadline_date.indexOf(date) > -1 : '') &&
+          (time ? task.deadline_time == time + ":00" : '')) && (priority != undefined ? task.priority == priority : undefined))
+      });
+    } else if (searchTerm && date && time && labels) {
+      if (searchTerm.length > 0) {
+        searchTerm = searchTerm.toLowerCase();
+      }
+      return value.filter((task) => {
+        return ((searchTerm ? task.task_name.toLowerCase().indexOf(searchTerm) > -1 : '') && ((date ? task.deadline_date.indexOf(date) > -1 : '') &&
+          (time ? task.deadline_time == time + ":00" : '')) && (labels != undefined ? task.label == labels : undefined))
+      });
+    } else if (searchTerm && date && time) {
       if (searchTerm.length > 0) {
         searchTerm = searchTerm.toLowerCase();
       }

@@ -1,3 +1,15 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" [routerLink]="['/']"><i class="fa fa-pencil"></i> Task Hacker</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+    </ul>
+  </div>
+</nav>
 <div class="container col-md-4 mt-5 bg-white">
 
   <ngb-tabset [destroyOnHide]="false">
@@ -23,7 +35,6 @@
               name="password" required>
             <div class="invalid-feedback" *ngIf="password.invalid">
               Please provide a valid password.
-              <a href="#" class="float-right">Forgot Password?</a>
             </div>
           </div>
 

@@ -12,15 +12,16 @@ git clone https://github.com/VenkateshMogili/task-hack.git
 
 ### Database Setup
 
-```1.Create db (taskhack)```
+```1.Create database (taskhack)```
 
-```2.Import db dump file (located in /backend/db/taskhack.sql)```
+```2.Import database dump file (located in backend/db/taskhack.sql)```
 
-```3.Configure database credentials (located in /backend/db/index.js)```
+```3.Configure database credentials (located in backend/db/index.js)```
 
 ### Run Express Server
 
 ```npm start```
+
 
 # Frontend
 

@@ -15,6 +15,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 /*routes*/
 const usersRouter = require('./routes/users');
 const tasksRouter = require('./routes/tasks');
+app.get('/',(req,res)=>{
+  res.send("Welcome to REST API");
+});
 app.use('/api/users/', usersRouter);
 app.use('/api/tasks/', tasksRouter);
 

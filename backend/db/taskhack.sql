@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 12, 2020 at 08:59 PM
+-- Generation Time: Jun 07, 2020 at 02:14 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.2
 
@@ -25,18 +25,58 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tasks`
+--
+
+CREATE TABLE `tasks` (
+  `id` int(11) NOT NULL,
+  `task_name` varchar(1000) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
+  `priority` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `deadline_date` varchar(100) DEFAULT NULL,
+  `deadline_time` time DEFAULT NULL,
+  `label` varchar(50) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tasks`
+--
+
+INSERT INTO `tasks` (`id`, `task_name`, `status`, `priority`, `created_at`, `deadline_date`, `deadline_time`, `label`, `active`) VALUES
+(1, 'Sample Task', 0, 0, '2020-06-07 00:13:40', '2020-06-07', '05:45:00', 'Work', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
+  `username` varchar(50) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL
+  `password` varchar(100) NOT NULL,
+  `profile_pic` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `profile_pic`) VALUES
+(1, 'Admin', 'admin@gmail.com', 'sha1$7b66b092$1$9a18533bab65f6b2296bfc1a206717c9751811ca', NULL);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -49,10 +89,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `tasks`
+--
+ALTER TABLE `tasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
